@@ -21,11 +21,18 @@ import java.awt.image.BufferedImage
 import java.awt.image.BufferedImage.TYPE_3BYTE_BGR
 import java.awt.image.BufferedImage.TYPE_BYTE_GRAY
 import java.awt.image.DataBufferByte
+import java.io.FileNotFoundException
 import java.lang.System.arraycopy
+import java.lang.System.getProperty
+import java.nio.file.Files.notExists
+import java.nio.file.Paths
 
 private val PATH_FIX = Regex("^/(\\w:)")
 
-private const val CASCADE_CLASSIFIER_PATH = "/haarcascades/haarcascade_"
+private val RESOURCE_PATH = Paths.get(getProperty("java.library.path"))
+    .also { println("RESOURCE_PATH: $it") }
+
+private const val CASCADE_CLASSIFIER_PATH = "haarcascades/haarcascade_"
 private const val CASCADE_CLASSIFIER_EXTENSION = ".xml"
 
 private const val TEXT_FONT = Core.FONT_HERSHEY_DUPLEX
@@ -35,8 +42,11 @@ private const val TEXT_THICKNESS = 2
 
 fun createCascadeClassifier(classifierName: String): CascadeClassifier {
     val resourcePath = "$CASCADE_CLASSIFIER_PATH$classifierName$CASCADE_CLASSIFIER_EXTENSION"
-    val filePath = getFileResource(resourcePath)
-    return CascadeClassifier(filePath)
+    val filePath = RESOURCE_PATH.resolveSibling(resourcePath)
+    if (notExists(filePath)) {
+        throw FileNotFoundException("$filePath")
+    }
+    return CascadeClassifier(filePath.toString())
 }
 
 fun getFileResource(resourcePath: String): String? {
@@ -63,7 +73,8 @@ fun Mat.draw(rects: Iterable<Rect>, color: Scalar, thickness: Int = 2) {
 
 fun Mat.subText(text: String, rect: Rect, color: Scalar) {
     val textPos = Point(rect.x + TEXT_MARGIN, rect.y + rect.height - TEXT_MARGIN)
-    putText(this, text, textPos,
+    putText(
+        this, text, textPos,
         TEXT_FONT,
         TEXT_SIZE, color,
         TEXT_THICKNESS

@@ -2,9 +2,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
     ext {
-        javaVersion = JavaVersion.VERSION_1_8
         kotlinVersion = '1.3.10'
-        openCvVersion = '0.5.0'
+        openCvVersion = '0.7.1'
     }
 
     repositories {
@@ -20,19 +19,22 @@ apply plugin: 'kotlin'
 apply plugin: 'application'
 apply plugin: 'idea'
 
-sourceCompatibility = javaVersion
-targetCompatibility = javaVersion
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_10
 
-mainClassName = 'com.betfair.hackday.cto.FaceDetectionApp'
+mainClassName = 'net.tvidal.facedetect.FaceDetectionApp'
 
 repositories {
+    flatDir {
+        dir '/opt/local/share/OpenCV/java'
+    }
     mavenLocal()
     mavenCentral()
 }
 
 tasks.withType(KotlinCompile).all {
     kotlinOptions {
-        jvmTarget = javaVersion
+        jvmTarget = JavaVersion.VERSION_1_8
     }
 }
 
@@ -48,5 +50,15 @@ dependencies {
     api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
     // OpenCV
-    implementation "com.intel.analytics.bigdl.core.native.opencv:opencv-java-mac:$openCvVersion"
+    implementation name: 'opencv', version: '343'
+}
+
+task copyDependencies(type: Copy) {
+    dependsOn jar
+    from configurations.runtimeClasspath
+    into "$buildDir/libs"
+}
+
+build {
+    dependsOn copyDependencies
 }
