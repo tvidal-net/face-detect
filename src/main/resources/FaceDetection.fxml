@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.ImageView?><?import javafx.scene.layout.BorderPane?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="net.tvidal.facedetect.FaceDetectionController">
+    <center>
+        <ImageView fx:id="originalFrame" preserveRatio="true" fitWidth="600" />
+    </center>
+</BorderPane>

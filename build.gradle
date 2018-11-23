@@ -1,0 +1,52 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+buildscript {
+    ext {
+        javaVersion = JavaVersion.VERSION_1_8
+        kotlinVersion = '1.3.10'
+        openCvVersion = '0.5.0'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'application'
+apply plugin: 'idea'
+
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
+
+mainClassName = 'com.betfair.hackday.cto.FaceDetectionApp'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+tasks.withType(KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = javaVersion
+    }
+}
+
+compileKotlin {
+    kotlinOptions {
+        allWarningsAsErrors = true
+    }
+}
+
+dependencies {
+
+    // Kotlin
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+
+    // OpenCV
+    implementation "com.intel.analytics.bigdl.core.native.opencv:opencv-java-mac:$openCvVersion"
+}
