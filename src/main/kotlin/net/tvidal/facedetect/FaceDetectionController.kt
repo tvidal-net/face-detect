@@ -1,9 +1,9 @@
 package net.tvidal.facedetect
 
-import net.tvidal.facedetect.CascadeClassifierWrapper.Companion.MAX_SIZE
 import javafx.application.Platform.runLater
 import javafx.fxml.FXML
 import javafx.scene.image.ImageView
+import net.tvidal.facedetect.CascadeClassifierWrapper.Companion.MAX_SIZE
 import org.opencv.core.Mat
 import org.opencv.core.Scalar
 import org.opencv.core.Size
@@ -22,8 +22,8 @@ open class FaceDetectionController {
     private val capture = VideoCapture()
 
     private val faceClassifier = CascadeClassifierWrapper("frontalface_alt", 1.05, 6, MAX_SIZE, Size())
-    private val eyesClassifier = CascadeClassifierWrapper("eye_tree_eyeglasses", 1.1, 16)
-    private val smileClassifier = CascadeClassifierWrapper("smile", 1.4, 32)
+    private val eyesClassifier = CascadeClassifierWrapper("eye_tree_eyeglasses", 1.05, 8)
+    private val smileClassifier = CascadeClassifierWrapper("smile", 1.4, 6)
 
     private val timer: ScheduledExecutorService = newSingleThreadScheduledExecutor()
 
