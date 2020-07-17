@@ -1,41 +1,14 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
-buildscript {
-    ext {
-        kotlinVersion = '1.3.10'
-        openCvVersion = '0.7.1'
-    }
-
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-    }
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.72'
+    id 'application'
+    id 'idea'
 }
-
-apply plugin: 'kotlin'
-apply plugin: 'application'
-apply plugin: 'idea'
-
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_10
 
 mainClassName = 'net.tvidal.facedetect.FaceDetectionApp'
 
 repositories {
-    flatDir {
-        dir '/opt/local/share/OpenCV/java'
-    }
     mavenLocal()
     mavenCentral()
-}
-
-tasks.withType(KotlinCompile).all {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
-    }
 }
 
 compileKotlin {
@@ -47,10 +20,10 @@ compileKotlin {
 dependencies {
 
     // Kotlin
-    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    api "org.jetbrains.kotlin:kotlin-stdlib"
 
     // OpenCV
-    implementation name: 'opencv', version: '343'
+    implementation 'org.openpnp:opencv:4.3.0-2'
 }
 
 task copyDependencies(type: Copy) {
